@@ -1,0 +1,7 @@
+data/re.sonny.Retro.desktop.in
+data/re.sonny.Retro.appdata.xml.in
+data/re.sonny.Retro.gschema.xml
+src/window.ui
+src/main.js
+src/window.js
+

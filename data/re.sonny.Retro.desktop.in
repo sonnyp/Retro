@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=retro
+Exec=re.sonny.Retro
+Icon=re.sonny.Retro
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true
