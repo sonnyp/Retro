@@ -1,38 +1,65 @@
 {
-    "app-id" : "re.sonny.Retro",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "42",
-    "sdk" : "org.gnome.Sdk",
-    "command" : "re.sonny.Retro",
-    "finish-args" : [
-        "--share=network",
-        "--share=ipc",
-        "--socket=fallback-x11",
-        "--device=dri",
-        "--socket=wayland"
-    ],
-    "cleanup" : [
-        "/include",
-        "/lib/pkgconfig",
-        "/man",
-        "/share/doc",
-        "/share/gtk-doc",
-        "/share/man",
-        "/share/pkgconfig",
-        "*.la",
-        "*.a"
-    ],
-    "modules" : [
+  "app-id": "re.sonny.Retro",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "43",
+  "sdk": "org.gnome.Sdk",
+  "command": "re.sonny.Retro",
+  "finish-args": [
+    "--share=ipc",
+    "--socket=fallback-x11",
+    "--device=dri",
+    "--socket=wayland"
+  ],
+  "modules": [
+    {
+      "name": "blueprint-compiler",
+      "buildsystem": "meson",
+      "sources": [
         {
-            "name" : "retro",
-            "builddir" : true,
-            "buildsystem" : "meson",
-            "sources" : [
-                {
-                    "type" : "git",
-                    "url" : "file:///home/sonny/Projects/Retro"
-                }
-            ]
+          "type": "git",
+          "url": "https://gitlab.gnome.org/jwestman/blueprint-compiler",
+          "branch": "main"
         }
-    ]
+      ]
+    },
+    {
+      "name": "gjspack",
+      "buildsystem": "simple",
+      "builddir": true,
+      "build-commands": [
+        "cd ./gjspack && ./bin/gjspack --appid=gjspack src/cli.js /app/bin"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/sonnyp/troll.git",
+          "branch": "main"
+        }
+      ]
+    },
+    {
+      "name": "Retro",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -D app.appdata.xml /app/share/metainfo/re.sonny.Retro.appdata.xml",
+        "install -D app.desktop /app/share/applications/re.sonny.Retro.desktop",
+        "install -D app.gschema.xml /app/share/glib-2.0/schemas/re.sonny.Retro.gschema.xml",
+        "install -D icon-symbolic.svg /app/share/icons/hicolor/symbolic/apps/re.sonny.Retro-symbolic.svg",
+        "install -D icon.svg /app/share/icons/hicolor/scalable/apps/re.sonny.Retro.svg",
+        "cp -r fonts-DSEG_v046/ /app/share/fonts",
+        "gjspack --appid=re.sonny.Retro --no-executable src/main.js /app/bin",
+        "install -D src/bin.js /app/bin/re.sonny.Retro"
+      ],
+      "post-install": [
+        "gtk-update-icon-cache --force --ignore-theme-index ${FLATPAK_DEST}/share/icons/hicolor",
+        "glib-compile-schemas ${FLATPAK_DEST}/share/glib-2.0/schemas"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "."
+        }
+      ]
+    }
+  ]
 }
