@@ -2,21 +2,21 @@ using Gtk 4.0;
 using Adw 1;
 
 template RetroWindow : Adw.ApplicationWindow {
-  default-width: 600;
-  default-height: 600;
-
+  name: "window";
   content: Gtk.WindowHandle {
     child: Gtk.Box {
       halign: center;
       valign: center;
       Overlay {
         [overlay]
-        Label label {
-          label: "";
+        Label foreground {
+          name: "foreground";
+          label: "!!!!!!!!";
         }
 
         Label background {
-          label: "";
+          name: "background";
+          label: "88:88:88";
         }
       }
     };

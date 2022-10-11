@@ -1,11 +1,20 @@
-window {
+#window {
   background-color: #fb7c00;
   padding: 16px;
   border: solid 8px black;
 }
 
-label {
+#foreground,
+#background {
   font-family: DSEG7 Classic;
   color: #222222;
   font-size: 128px;
+}
+
+#foreground {
+  opacity: 1;
+}
+
+#background {
+  opacity: 0.2;
 }

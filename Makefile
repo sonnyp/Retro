@@ -1,23 +1,17 @@
-.PHONY: build
+.PHONY: dev build lint test clean
+
+dev:
+	./re.sonny.Retro
 
 build:
-	flatpak-builder --user --arch=x86_64 --ccache --force-clean --build-only --disable-updates build flatpak.json
-	flatpak-builder --run build flatpak.json re.sonny.Retro
-# 	./bin/gjspack --appid=gjspack src/cli.js bin/
+	flatpak-builder --user --arch=x86_64 --ccache --force-clean --build-only --disable-updates .flatpak re.sonny.Retro.json
 
-# test: build
-# 	./bin/gjspack --appid=gjspack-test test/gjspack.test.js test/build/
-# 	test/build/gjspack-test
+lint:
+	./node_modules/.bin/eslint .
 
-# ci: clean test
-# 	./bin/gjspack --appid=gjspack-demo ./demo/main.js ./demo/build
-# 	cd demo && flatpak-builder --user --force-clean flatpak flatpak.json
+test: lint build
+	flatpak-builder --run .flatpak re.sonny.Retro.json re.sonny.Retro --help > /dev/null
 
-# clean:
-# 	rm -rf demo/.flatpak-builder demo/flatpak demo/build test/build
-
-# demo: build
-# 	./bin/gjspack --appid=gjspack-demo ./demo/main.js ./demo/build
-# 	./demo/build/gjspack-demo
-
-# flatpak-builder --arch=x86_64 --ccache --force-clean --state-dir /home/sonny/.var/app/org.gnome.Builder/cache/gnome-builder/flatpak-builder --download-only --disable-updates --stop-at=Tangram /home/sonny/.var/app/org.gnome.Builder/cache/gnome-builder/projects/Tangram/flatpak/staging/x86_64-main /home/sonny/Projects/Tangram/re.sonny.Tangram.json
+clean:
+	rm -rf .flatpak .flatpak-builder
+	
