@@ -18,7 +18,8 @@
         {
           "type": "git",
           "url": "https://gitlab.gnome.org/jwestman/blueprint-compiler",
-          "branch": "main"
+          "tag": "v0.4.0",
+          "commit": "75a6d95988736ec0471d22ceb07579c0cedac2ad"
         }
       ]
     },
@@ -33,7 +34,7 @@
         {
           "type": "git",
           "url": "https://github.com/sonnyp/troll.git",
-          "branch": "main"
+          "commit": "8d7c2be66a4bf1cbb2081121997a33662fc19cd0"
         }
       ]
     },
@@ -41,12 +42,12 @@
       "name": "Retro",
       "buildsystem": "simple",
       "build-commands": [
-        "install -D app.appdata.xml /app/share/metainfo/re.sonny.Retro.appdata.xml",
-        "install -D app.desktop /app/share/applications/re.sonny.Retro.desktop",
-        "install -D app.gschema.xml /app/share/glib-2.0/schemas/re.sonny.Retro.gschema.xml",
-        "install -D icon-symbolic.svg /app/share/icons/hicolor/symbolic/apps/re.sonny.Retro-symbolic.svg",
-        "install -D icon.svg /app/share/icons/hicolor/scalable/apps/re.sonny.Retro.svg",
-        "cp -r fonts-DSEG_v046/ /app/share/fonts",
+        "install -D data/app.appdata.xml /app/share/metainfo/re.sonny.Retro.appdata.xml",
+        "install -D data/app.desktop /app/share/applications/re.sonny.Retro.desktop",
+        "install -D data/app.gschema.xml /app/share/glib-2.0/schemas/re.sonny.Retro.gschema.xml",
+        "install -D data/icon-symbolic.svg /app/share/icons/hicolor/symbolic/apps/re.sonny.Retro-symbolic.svg",
+        "install -D data/icon.svg /app/share/icons/hicolor/scalable/apps/re.sonny.Retro.svg",
+        "cp -r data/fonts-DSEG_v046/ /app/share/fonts",
         "gjspack --appid=re.sonny.Retro --no-executable src/main.js /app/bin",
         "install -D src/bin.js /app/bin/re.sonny.Retro"
       ],
