@@ -54,7 +54,8 @@
       "post-install": [
         "gtk-update-icon-cache --force --ignore-theme-index ${FLATPAK_DEST}/share/icons/hicolor",
         "glib-compile-schemas ${FLATPAK_DEST}/share/glib-2.0/schemas",
-        "update-desktop-database ${FLATPAK_DEST}/share/applications"
+        "update-desktop-database ${FLATPAK_DEST}/share/applications",
+        "fc-cache ${FLATPAK_DEST}/share/fonts"
       ],
       "sources": [
         {

@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "devDependencies": {
     "@gi-types/adw1": "^1.1.1",
     "@gi-types/base-types": "^1.0.0",
@@ -11,6 +12,5 @@
     "eslint": "^8.24.0",
     "eslint-plugin-import": "^2.26.0",
     "prettier": "^2.7.1"
-  },
-  "type": "module"
+  }
 }

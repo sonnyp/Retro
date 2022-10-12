@@ -1,7 +1,12 @@
 .PHONY: dev build lint test clean
 
 dev:
-	./re.sonny.Retro
+	@ mkdir -p ~/.local/share/fonts
+	@ cp -r data/fonts-DSEG_v046/* ~/.local/share/fonts
+	@ fc-cache ~/.local/share/fonts/
+	@ mkdir -p /tmp/retro
+	@ glib-compile-schemas --targetdir /tmp/retro --strict ./data
+	@ GSETTINGS_SCHEMA_DIR=/tmp/retro ./re.sonny.Retro
 
 build:
 	flatpak-builder --user --arch=x86_64 --ccache --force-clean --build-only --disable-updates .flatpak re.sonny.Retro.json

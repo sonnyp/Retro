@@ -19,11 +19,26 @@ template RetroWindow : Adw.ApplicationWindow {
           label: "88:88:88";
         }
       }
+
+      MenuButton {
+        icon-name: "open-menu-symbolic";
+        menu-model: primary_menu;
+        primary: true;
+        valign: center;
+        styles ["circular"]
+      }
     };
   };
 }
 
 menu primary_menu {
+  section {
+    item {
+      label: _("Display seconds");
+      action: "win.display-seconds";
+    }
+  }
+
   section {
     item {
       label: _("_Preferences");
@@ -32,11 +47,11 @@ menu primary_menu {
 
     item {
       label: _("_Keyboard Shortcuts");
-      action: "win.show-help-overlay";
+      action: "app.shortcuts";
     }
 
     item {
-      label: _("_About retro");
+      label: _("_About Retro");
       action: "app.about";
     }
   }
