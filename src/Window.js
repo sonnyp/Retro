@@ -4,6 +4,9 @@ import Adw from "gi://Adw";
 import Gio from "gi://Gio";
 import Template from "./window.blp" assert { type: "uri" };
 import Editor from "./Editor.js";
+import Source from "gi://GtkSource";
+import Gtk from "gi://Gtk";
+import { promiseTask } from "../troll/src/util.js";
 
 const settings = new Gio.Settings({
   schema_id: "re.sonny.Retro",
@@ -32,10 +35,57 @@ class RetroWindow extends Adw.ApplicationWindow {
 
     const action_customize = new Gio.SimpleAction({ name: "customize" });
     action_customize.connect("activate", (action) => {
-      if (!window_editor) window_editor = new Editor(application);
+      const { buffer, source_file } = this;
+      if (!window_editor)
+        window_editor = new Editor({ application, buffer, source_file });
       window_editor.present();
     });
     this.add_action(action_customize);
+
+    this.setupBuffer();
+  }
+
+  setupBuffer() {
+    const buffer = new Source.Buffer();
+    this.buffer = buffer;
+
+    const file = Gio.File.new_for_path(
+      GLib.build_filenamev([createDataDir(), "style.css"])
+    );
+    this.source_file = new Source.File({
+      location: file,
+    });
+
+    this.buffer.connect("changed", () => {
+      this.updateStyle();
+    });
+
+    this.load().catch(logError);
+  }
+
+  updateStyle() {
+    if (this.css_provider) {
+      Gtk.StyleContext.remove_provider_for_display(
+        this.get_display(),
+        this.css_provider
+      );
+      this.css_provider = null;
+    }
+
+    const css_provider = new Gtk.CssProvider();
+    // css_provider.connect("parsing-error", (self, section, error) => {
+    //   const diagnostic = getDiagnostic(section, error);
+    //   panel_style.handleDiagnostic(diagnostic);
+    // });
+    if (this.buffer.text) {
+      css_provider.load_from_data(this.buffer.text);
+    }
+    Gtk.StyleContext.add_provider_for_display(
+      this.get_display(),
+      css_provider,
+      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+    );
+    this.css_provider;
   }
 
   update() {
@@ -59,6 +109,41 @@ class RetroWindow extends Adw.ApplicationWindow {
       this._foreground.label = datetime.format("%R");
     }
   }
+
+  async load() {
+    const file_loader = new Source.FileLoader({
+      buffer: this.buffer,
+      file: this.source_file,
+    });
+
+    let success;
+    try {
+      success = await promiseTask(
+        file_loader,
+        "load_async",
+        "load_finish",
+        GLib.PRIORITY_DEFAULT,
+        null,
+        null
+      );
+    } catch (err) {
+      if (err.code !== Gio.IOErrorEnum.NOT_FOUND) {
+        return logError(err);
+      }
+      success = false;
+    }
+
+    if (success) {
+      this.buffer.set_modified(false);
+    } else {
+      this.buffer.text = new TextDecoder("utf8").decode(
+        Gio.resources_lookup_data(
+          "/re/sonny/Retro/src/style.css",
+          Gio.ResourceLookupFlags.NONE
+        ).toArray()
+      );
+    }
+  }
 }
 
 export default GObject.registerClass(
@@ -69,3 +154,20 @@ export default GObject.registerClass(
   },
   RetroWindow
 );
+
+function createDataDir() {
+  const data_dir = GLib.build_filenamev([
+    GLib.get_user_data_dir(),
+    "re.sonny.Retro",
+  ]);
+
+  try {
+    Gio.File.new_for_path(data_dir).make_directory(null);
+  } catch (err) {
+    if (err.code !== Gio.IOErrorEnum.EXISTS) {
+      throw err;
+    }
+  }
+
+  return data_dir;
+}
