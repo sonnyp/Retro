@@ -14,7 +14,7 @@ const style_manager = Adw.StyleManager.get_default();
 const language = language_manager.get_language("css");
 
 class EditorWindow extends Gtk.Window {
-  constructor({ application, buffer, source_file }) {
+  constructor({ application, buffer, source_file, reset, default_style }) {
     super({ application });
 
     this.buffer = buffer;
@@ -28,7 +28,12 @@ class EditorWindow extends Gtk.Window {
       this.updateStyleScheme();
     });
 
+    this.default_style = default_style;
+    this._button_reset.connect("clicked", reset);
+
+    this.updateButtonReset();
     this.buffer.connect("modified-changed", () => {
+      this.updateButtonReset();
       if (!this.buffer.get_modified()) return;
       this.save().catch(logError);
     });
@@ -38,6 +43,10 @@ class EditorWindow extends Gtk.Window {
     const { dark } = style_manager;
     const scheme = scheme_manager.get_scheme(dark ? "Adwaita-dark" : "Adwaita");
     this.buffer.set_style_scheme(scheme);
+  }
+
+  updateButtonReset() {
+    this._button_reset.sensitive = this.buffer.text !== this.default_style;
   }
 
   async save() {
@@ -63,7 +72,7 @@ export default GObject.registerClass(
   {
     GTypeName: "EditorWindow",
     Template,
-    InternalChildren: ["source_view"],
+    InternalChildren: ["source_view", "button_reset"],
   },
   EditorWindow
 );

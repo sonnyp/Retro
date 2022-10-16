@@ -1,12 +1,20 @@
 using Gtk 4.0;
 using Adw 1;
 using GtkSource 5;
+using Adw 1;
 
 template EditorWindow : Gtk.Window {
   title: "Customize Retro";
   default-width: 400;
   default-height: 600;
   hide-on-close: true;
+  titlebar: Adw.HeaderBar {
+    Button button_reset {
+      label: _('_Reset');
+      use-underline: true;
+    }
+  };
+
   ScrolledWindow {
     vexpand: true;
     GtkSource.View source_view {

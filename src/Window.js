@@ -25,6 +25,8 @@ class RetroWindow extends Adw.ApplicationWindow {
       return GLib.SOURCE_CONTINUE;
     });
 
+    this.setupBuffer();
+
     const display_seconds = settings.create_action("display-seconds");
     this.add_action(display_seconds);
 
@@ -33,16 +35,27 @@ class RetroWindow extends Adw.ApplicationWindow {
       this.update();
     });
 
+    this.default_style = new TextDecoder("utf8").decode(
+      Gio.resources_lookup_data(
+        "/re/sonny/Retro/src/style.css",
+        Gio.ResourceLookupFlags.NONE
+      ).toArray()
+    );
+
     const action_customize = new Gio.SimpleAction({ name: "customize" });
     action_customize.connect("activate", (action) => {
-      const { buffer, source_file } = this;
+      const { buffer, source_file, reset, default_style } = this;
       if (!window_editor)
-        window_editor = new Editor({ application, buffer, source_file });
+        window_editor = new Editor({
+          application,
+          buffer,
+          source_file,
+          reset,
+          default_style,
+        });
       window_editor.present();
     });
     this.add_action(action_customize);
-
-    this.setupBuffer();
   }
 
   setupBuffer() {
@@ -136,14 +149,13 @@ class RetroWindow extends Adw.ApplicationWindow {
     if (success) {
       this.buffer.set_modified(false);
     } else {
-      this.buffer.text = new TextDecoder("utf8").decode(
-        Gio.resources_lookup_data(
-          "/re/sonny/Retro/src/style.css",
-          Gio.ResourceLookupFlags.NONE
-        ).toArray()
-      );
+      this.reset();
     }
   }
+
+  reset = () => {
+    this.buffer.text = this.default_style;
+  };
 }
 
 export default GObject.registerClass(
