@@ -1,11 +1,9 @@
 #!/usr/bin/env -S gjs -m
 
-// -*- mode: js; -*-
-
 import { programInvocationName, exit } from "system";
 import GLib from "gi://GLib";
 import Gio from "gi://Gio";
-import { build as gjspack } from "./troll/gjspack/src/gjspack.js";
+import { build as gjspack } from "../troll/gjspack/src/gjspack.js";
 
 globalThis.__DEV__ = true;
 

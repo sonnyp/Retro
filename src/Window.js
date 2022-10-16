@@ -3,11 +3,14 @@ import GLib from "gi://GLib";
 import Adw from "gi://Adw";
 import Gio from "gi://Gio";
 import Template from "./window.blp" assert { type: "uri" };
+import Editor from "./Editor.js";
 
 const settings = new Gio.Settings({
   schema_id: "re.sonny.Retro",
   path: "/re/sonny/Retro/",
 });
+
+let window_editor;
 
 class RetroWindow extends Adw.ApplicationWindow {
   constructor(application) {
@@ -26,6 +29,13 @@ class RetroWindow extends Adw.ApplicationWindow {
       if (key !== "display-seconds") return;
       this.update();
     });
+
+    const action_customize = new Gio.SimpleAction({ name: "customize" });
+    action_customize.connect("activate", (action) => {
+      if (!window_editor) window_editor = new Editor(application);
+      window_editor.present();
+    });
+    this.add_action(action_customize);
   }
 
   update() {

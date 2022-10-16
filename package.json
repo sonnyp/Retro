@@ -1,6 +1,9 @@
 {
   "private": true,
   "type": "module",
+  "scripts": {
+    "start": "make dev"
+  },
   "devDependencies": {
     "@gi-types/adw1": "^1.1.1",
     "@gi-types/base-types": "^1.0.0",

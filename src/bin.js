@@ -16,7 +16,7 @@ const resource = Gio.resource_load(
 Gio.resources_register(resource);
 
 const loop = new GLib.MainLoop(null, false);
-import(`resource:///re/sonny/Retro/src/main.js`)
+import("resource:///re/sonny/Retro/src/main.js")
   .then((module) => {
     // Workaround for issue
     // https://gitlab.gnome.org/GNOME/gjs/-/issues/468

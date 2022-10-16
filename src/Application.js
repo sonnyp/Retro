@@ -14,15 +14,15 @@ class RetroApplication extends Adw.Application {
       resource_base_path: "/re/sonny/Retro/src",
     });
 
-    const quit_action = new Gio.SimpleAction({ name: "quit" });
-    quit_action.connect("activate", (action) => {
+    const action_quit = new Gio.SimpleAction({ name: "quit" });
+    action_quit.connect("activate", (action) => {
       this.quit();
     });
-    this.add_action(quit_action);
-    this.set_accels_for_action("app.quit", ["<primary>q"]);
+    this.add_action(action_quit);
+    this.set_accels_for_action("app.quit", ["<Ctrl>Q"]);
 
-    const show_about_action = new Gio.SimpleAction({ name: "about" });
-    show_about_action.connect("activate", (action) => {
+    const action_about = new Gio.SimpleAction({ name: "about" });
+    action_about.connect("activate", (action) => {
       const about_window = new Adw.AboutWindow({
         developer_name: "Sonny Piers",
         copyright: "Copyright 2022 Sonny Piers",
@@ -39,13 +39,7 @@ class RetroApplication extends Adw.Application {
       });
       about_window.present();
     });
-    this.add_action(show_about_action);
-
-    const open_preferences = new Gio.SimpleAction({ name: "preferences" });
-    open_preferences.connect("activate", (action) => {
-      log("preferences");
-    });
-    this.add_action(open_preferences);
+    this.add_action(action_about);
   }
 
   vfunc_activate() {

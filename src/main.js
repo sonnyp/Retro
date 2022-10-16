@@ -3,10 +3,13 @@ import GLib from "gi://GLib";
 
 import "gi://Gtk?version=4.0";
 import "gi://Adw?version=1";
+import Source from "gi://GtkSource?version=5";
 
 import RetroApplication from "./Application.js";
 
 import "./style.css";
+
+Source.init();
 
 export function main(argv) {
   const application = new RetroApplication();
