@@ -5,8 +5,6 @@ import Gio from "gi://Gio";
 import Template from "./window.blp" assert { type: "uri" };
 import Gtk from "gi://Gtk";
 
-import "./Editor.js";
-
 const settings = new Gio.Settings({
   schema_id: "re.sonny.Retro",
   path: "/re/sonny/Retro/",
