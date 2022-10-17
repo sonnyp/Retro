@@ -85,10 +85,9 @@ class RetroWindow extends Adw.ApplicationWindow {
     }
 
     const css_provider = new Gtk.CssProvider();
-    // css_provider.connect("parsing-error", (self, section, error) => {
-    //   const diagnostic = getDiagnostic(section, error);
-    //   panel_style.handleDiagnostic(diagnostic);
-    // });
+    if (window_editor) {
+      window_editor?.onCssProvider(css_provider);
+    }
     if (text) {
       css_provider.load_from_data(text);
     }
