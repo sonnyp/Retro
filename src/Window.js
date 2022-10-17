@@ -3,10 +3,9 @@ import GLib from "gi://GLib";
 import Adw from "gi://Adw";
 import Gio from "gi://Gio";
 import Template from "./window.blp" assert { type: "uri" };
-import Editor from "./Editor.js";
-import Source from "gi://GtkSource";
 import Gtk from "gi://Gtk";
-import { promiseTask } from "../troll/src/util.js";
+
+import "./Editor.js";
 
 const settings = new Gio.Settings({
   schema_id: "re.sonny.Retro",
@@ -25,8 +24,6 @@ class RetroWindow extends Adw.ApplicationWindow {
       return GLib.SOURCE_CONTINUE;
     });
 
-    this.setupBuffer();
-
     const display_seconds = settings.create_action("display-seconds");
     this.add_action(display_seconds);
 
@@ -35,6 +32,27 @@ class RetroWindow extends Adw.ApplicationWindow {
       this.update();
     });
 
+    this.load();
+
+    const action_customize = new Gio.SimpleAction({ name: "customize" });
+    action_customize.connect("activate", async (action) => {
+      const { default_style, file, updateStyle } = this;
+      if (!window_editor) {
+        const { default: Editor } = await import("./Editor.js");
+        window_editor = new Editor({
+          application,
+          default_style,
+          file,
+          text: this.style || "",
+          onChange: updateStyle,
+        });
+      }
+      window_editor.present();
+    });
+    this.add_action(action_customize);
+  }
+
+  load() {
     this.default_style = new TextDecoder("utf8").decode(
       Gio.resources_lookup_data(
         "/re/sonny/Retro/src/style.css",
@@ -42,41 +60,24 @@ class RetroWindow extends Adw.ApplicationWindow {
       ).toArray()
     );
 
-    const action_customize = new Gio.SimpleAction({ name: "customize" });
-    action_customize.connect("activate", (action) => {
-      const { buffer, source_file, reset, default_style } = this;
-      if (!window_editor)
-        window_editor = new Editor({
-          application,
-          buffer,
-          source_file,
-          reset,
-          default_style,
-        });
-      window_editor.present();
-    });
-    this.add_action(action_customize);
-  }
-
-  setupBuffer() {
-    const buffer = new Source.Buffer();
-    this.buffer = buffer;
-
     const file = Gio.File.new_for_path(
       GLib.build_filenamev([createDataDir(), "style.css"])
     );
-    this.source_file = new Source.File({
-      location: file,
-    });
+    this.file = file;
 
-    this.buffer.connect("changed", () => {
-      this.updateStyle();
-    });
-
-    this.load().catch(logError);
+    try {
+      const [, contents] = file.load_contents(null);
+      this.updateStyle(new TextDecoder().decode(contents));
+    } catch (err) {
+      if (err.code !== Gio.IOErrorEnum.NOT_FOUND) {
+        throw err;
+      }
+      this.updateStyle(this.default_style);
+    }
   }
 
-  updateStyle() {
+  updateStyle = (text) => {
+    this.style = text;
     if (this.css_provider) {
       Gtk.StyleContext.remove_provider_for_display(
         this.get_display(),
@@ -90,16 +91,16 @@ class RetroWindow extends Adw.ApplicationWindow {
     //   const diagnostic = getDiagnostic(section, error);
     //   panel_style.handleDiagnostic(diagnostic);
     // });
-    if (this.buffer.text) {
-      css_provider.load_from_data(this.buffer.text);
+    if (text) {
+      css_provider.load_from_data(text);
     }
     Gtk.StyleContext.add_provider_for_display(
       this.get_display(),
       css_provider,
       Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
     );
-    this.css_provider;
-  }
+    this.css_provider = css_provider;
+  };
 
   update() {
     if (settings.get_boolean("display-seconds")) {
@@ -122,40 +123,6 @@ class RetroWindow extends Adw.ApplicationWindow {
       this._foreground.label = datetime.format("%R");
     }
   }
-
-  async load() {
-    const file_loader = new Source.FileLoader({
-      buffer: this.buffer,
-      file: this.source_file,
-    });
-
-    let success;
-    try {
-      success = await promiseTask(
-        file_loader,
-        "load_async",
-        "load_finish",
-        GLib.PRIORITY_DEFAULT,
-        null,
-        null
-      );
-    } catch (err) {
-      if (err.code !== Gio.IOErrorEnum.NOT_FOUND) {
-        return logError(err);
-      }
-      success = false;
-    }
-
-    if (success) {
-      this.buffer.set_modified(false);
-    } else {
-      this.reset();
-    }
-  }
-
-  reset = () => {
-    this.buffer.text = this.default_style;
-  };
 }
 
 export default GObject.registerClass(

@@ -18,6 +18,7 @@ template EditorWindow : Gtk.Window {
   ScrolledWindow {
     vexpand: true;
     GtkSource.View source_view {
+      buffer: GtkSource.Buffer buffer {};
       monospace: true;
       auto-indent: true;
       highlight-current-line: true;

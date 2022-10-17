@@ -14,14 +14,11 @@ const style_manager = Adw.StyleManager.get_default();
 const language = language_manager.get_language("css");
 
 class EditorWindow extends Gtk.Window {
-  constructor({ application, buffer, source_file, reset, default_style }) {
+  constructor({ application, default_style, file, text, onChange }) {
     super({ application });
 
-    this.buffer = buffer;
-    this.source_file = source_file;
-    this.buffer.set_language(language);
-
-    this._source_view.buffer = buffer;
+    this._buffer.set_language(language);
+    this._buffer.text = text;
 
     this.updateStyleScheme();
     style_manager.connect("notify::dark", () => {
@@ -29,12 +26,20 @@ class EditorWindow extends Gtk.Window {
     });
 
     this.default_style = default_style;
-    this._button_reset.connect("clicked", reset);
+    this._button_reset.connect("clicked", this.reset);
+
+    this.source_file = new Source.File({
+      location: file,
+    });
+
+    this._buffer.connect("changed", () => {
+      onChange(this._buffer.text);
+    });
 
     this.updateButtonReset();
-    this.buffer.connect("modified-changed", () => {
+    this._buffer.connect("modified-changed", () => {
       this.updateButtonReset();
-      if (!this.buffer.get_modified()) return;
+      if (!this._buffer.get_modified()) return;
       this.save().catch(logError);
     });
   }
@@ -42,16 +47,17 @@ class EditorWindow extends Gtk.Window {
   updateStyleScheme() {
     const { dark } = style_manager;
     const scheme = scheme_manager.get_scheme(dark ? "Adwaita-dark" : "Adwaita");
-    this.buffer.set_style_scheme(scheme);
+    this._buffer.set_style_scheme(scheme);
   }
 
   updateButtonReset() {
-    this._button_reset.sensitive = this.buffer.text !== this.default_style;
+    this._button_reset.sensitive =
+      this._buffer.text.trim() !== this.default_style.trim();
   }
 
   async save() {
     const file_saver = new Source.FileSaver({
-      buffer: this.buffer,
+      buffer: this._buffer,
       file: this.source_file,
     });
     const success = await promiseTask(
@@ -63,16 +69,20 @@ class EditorWindow extends Gtk.Window {
       null
     );
     if (success) {
-      this.buffer.set_modified(false);
+      this._buffer.set_modified(false);
     }
   }
+
+  reset = () => {
+    this._buffer.text = this.default_style;
+  };
 }
 
 export default GObject.registerClass(
   {
     GTypeName: "EditorWindow",
     Template,
-    InternalChildren: ["source_view", "button_reset"],
+    InternalChildren: ["source_view", "button_reset", "buffer"],
   },
   EditorWindow
 );
