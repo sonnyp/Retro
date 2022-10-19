@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
 	<id>re.sonny.Retro.desktop</id>
+  <launchable type="desktop-id">re.sonny.Retro.desktop</launchable>
+  <name translatable="no">Retro</name>
+  <developer_name translatable="no">Sonny Piers</developer_name>
+  <update_contact>sonnyp@gnome.org</update_contact>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0</project_license>
   <summary>A customizable retro digital segment clock</summary>
