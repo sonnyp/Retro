@@ -1,6 +1,14 @@
+<img style="vertical-align: middle;" src="data/icon.png" width="120" height="120" align="left">
+
 # Retro
 
-A retro clock that can be customized with CSS.
+A customizable retro digital segment clock
+
+![](data/screenshots/default.png)
+
+![](data/screenshots/editor.png)
+
+![](data/screenshots/custom.png)
 
 ## Development
 

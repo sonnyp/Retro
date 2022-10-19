@@ -32,9 +32,8 @@
       ],
       "sources": [
         {
-          "type": "git",
-          "url": "https://github.com/sonnyp/troll.git",
-          "commit": "8d7c2be66a4bf1cbb2081121997a33662fc19cd0"
+          "type": "dir",
+          "path": "troll"
         }
       ]
     },
@@ -42,7 +41,7 @@
       "name": "Retro",
       "buildsystem": "simple",
       "build-commands": [
-        "install -D data/app.appdata.xml /app/share/metainfo/re.sonny.Retro.appdata.xml",
+        "install -D data/app.metainfo.xml /app/share/metainfo/re.sonny.Retro.metainfo.xml",
         "install -D data/app.desktop /app/share/applications/re.sonny.Retro.desktop",
         "install -D data/app.gschema.xml /app/share/glib-2.0/schemas/re.sonny.Retro.gschema.xml",
         "install -D data/icon-symbolic.svg /app/share/icons/hicolor/symbolic/apps/re.sonny.Retro-symbolic.svg",

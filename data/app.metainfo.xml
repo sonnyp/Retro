@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+	<id>re.sonny.Retro.desktop</id>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>GPL-3.0</project_license>
+  <summary>A customizable retro digital segment clock</summary>
+	<description>
+	  <p>Retro is a simple toy clock that can be customized with CSS.</p>
+	</description>
+  <url type="homepage">https://retro.sonny.re</url>
+  <url type="bugtracker">https://retro.sonny.re/feedback</url>
+  <url type="donation">https://retro.sonny.re/donate</url>
+  <!-- <url type="translate">https://retro.sonny.re/translate</url> -->
+  <screenshots>
+    <screenshot type="default">
+      <image>
+        https://raw.githubusercontent.com/sonnyp/Retro/main/data/screenshots/default.png
+      </image>
+    </screenshot>
+    <screenshot>
+      <image>
+        https://raw.githubusercontent.com/sonnyp/Retro/main/data/screenshots/editor.png
+      </image>
+    </screenshot>
+    <screenshot>
+      <image>
+        https://raw.githubusercontent.com/sonnyp/Retro/main/data/screenshots/custom.png
+      </image>
+    </screenshot>
+  </screenshots>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="1.0" date="2022-10-19">
+      <description>This is the first release of Retro. Enjoy.</description>
+    </release>
+  </releases>
+  <kudos>
+    <kudo>HiDpiIcon</kudo>
+    <kudo>HighContrast</kudo>
+    <kudo>ModernToolkit</kudo>
+  </kudos>
+  <branding>
+    <color type="primary">#FF7800</color>
+  </branding>
+  <custom>
+    <value key="GnomeSoftware::key-colors">[rgb(255, 120, 0)]</value>
+  </custom>
+</component>

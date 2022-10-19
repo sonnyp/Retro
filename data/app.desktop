@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=retro
+Name=Retro
 Exec=re.sonny.Retro
 Icon=re.sonny.Retro
 Terminal=false
 Type=Application
-Categories=GTK;
+Categories=GTK;GNOME;Education;Utility;Amusement;Clock;
 StartupNotify=true

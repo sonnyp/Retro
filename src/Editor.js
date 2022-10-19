@@ -2,7 +2,7 @@ import GObject from "gi://GObject";
 import GLib from "gi://GLib";
 import Adw from "gi://Adw";
 import Gtk from "gi://Gtk";
-import Source from "gi://GtkSource";
+import Source from "gi://GtkSource?version=5";
 import Pango from "gi://Pango";
 
 import Template from "./editor.blp" assert { type: "uri" };
@@ -16,6 +16,7 @@ const scheme_manager = Source.StyleSchemeManager.get_default();
 const style_manager = Adw.StyleManager.get_default();
 const language = language_manager.get_language("css");
 
+Source.init();
 class EditorWindow extends Gtk.Window {
   constructor({ application, default_style, file, text, onChange }) {
     super({ application });
