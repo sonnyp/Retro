@@ -16,6 +16,8 @@ class RetroWindow extends Adw.ApplicationWindow {
   constructor(application) {
     super({ application });
 
+    this.bind_state();
+
     this.update();
     GLib.timeout_add_seconds(GLib.PRIORITY_HIGH, 1, () => {
       this.updateTime();
@@ -52,6 +54,33 @@ class RetroWindow extends Adw.ApplicationWindow {
       });
     }
     window_editor.present();
+  }
+
+  bind_state() {
+    settings.bind(
+      "width",
+      this,
+      "default-width",
+      Gio.SettingsBindFlags.DEFAULT
+    );
+    settings.bind(
+      "height",
+      this,
+      "default-height",
+      Gio.SettingsBindFlags.DEFAULT
+    );
+    settings.bind(
+      "is-maximized",
+      this,
+      "maximized",
+      Gio.SettingsBindFlags.DEFAULT
+    );
+    settings.bind(
+      "is-fullscreen",
+      this,
+      "fullscreened",
+      Gio.SettingsBindFlags.DEFAULT
+    );
   }
 
   load() {
