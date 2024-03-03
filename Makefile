@@ -9,7 +9,7 @@ dev:
 	@ GSETTINGS_SCHEMA_DIR=/tmp/retro ./src/local.js
 
 build:
-	flatpak-builder --user --arch=x86_64 --ccache --force-clean --build-only --disable-updates .flatpak re.sonny.Retro.json
+	flatpak run --command=flatpak-builder org.flatpak.Builder --user --arch=x86_64 --ccache --force-clean --build-only --disable-updates .flatpak re.sonny.Retro.json
 
 lint:
 	./node_modules/.bin/eslint .
@@ -17,8 +17,8 @@ lint:
 test: lint build
 	flatpak run --command=flatpak-builder-lint org.flatpak.Builder re.sonny.Retro.json
 	flatpak run --command=desktop-file-validate org.flatpak.Builder data/app.desktop
-	flatpak run --command=appstreamcli org.flatpak.Builder validate --override=release-time-missing=info --no-net data/app.appdata.xml
-	flatpak-builder --run .flatpak re.sonny.Retro.json re.sonny.Retro --help > /dev/null
+	flatpak run --command=flatpak-builder-lint org.flatpak.Builder appstream data/app.metainfo.xml
+	flatpak run --command=flatpak-builder org.flatpak.Builder --run .flatpak re.sonny.Retro.json re.sonny.Retro --help > /dev/null
 
 clean:
 	rm -rf .flatpak .flatpak-builder
