@@ -33,21 +33,25 @@ class RetroWindow extends Adw.ApplicationWindow {
     this.load();
 
     const action_customize = new Gio.SimpleAction({ name: "customize" });
-    action_customize.connect("activate", async (action) => {
-      const { default_style, file, updateStyle } = this;
-      if (!window_editor) {
-        const { default: Editor } = await import("./Editor.js");
-        window_editor = new Editor({
-          application,
-          default_style,
-          file,
-          text: this.style || "",
-          onChange: updateStyle,
-        });
-      }
-      window_editor.present();
+    action_customize.connect("activate", (_self) => {
+      this.customize().catch(console.error);
     });
     this.add_action(action_customize);
+  }
+
+  async customize() {
+    if (!window_editor) {
+      const { default_style, file, updateStyle, application } = this;
+      const { default: Editor } = await import("./Editor.js");
+      window_editor = new Editor({
+        application,
+        default_style,
+        file,
+        text: this.style || "",
+        onChange: updateStyle,
+      });
+    }
+    window_editor.present();
   }
 
   load() {
@@ -89,7 +93,7 @@ class RetroWindow extends Adw.ApplicationWindow {
       window_editor?.onCssProvider(css_provider);
     }
     if (text) {
-      css_provider.load_from_data(text);
+      css_provider.load_from_string(text);
     }
     Gtk.StyleContext.add_provider_for_display(
       this.get_display(),
