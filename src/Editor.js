@@ -4,19 +4,21 @@ import Adw from "gi://Adw";
 import Gtk from "gi://Gtk";
 import Source from "gi://GtkSource?version=5";
 import Pango from "gi://Pango";
+import Gio from "gi://Gio";
 
 import Template from "./editor.blp" assert { type: "uri" };
 
-import { promiseTask } from "../troll/src/util.js";
 import HoverProvider from "./HoverProvider.js";
 import { getItersAtRange } from "./util.js";
+
+Source.init();
+Gio._promisify(Source.FileSaver.prototype, "save_async", "save_finish");
 
 const language_manager = Source.LanguageManager.get_default();
 const scheme_manager = Source.StyleSchemeManager.get_default();
 const style_manager = Adw.StyleManager.get_default();
 const language = language_manager.get_language("css");
 
-Source.init();
 class EditorWindow extends Gtk.Window {
   constructor({ application, default_style, file, text, onChange }) {
     super({ application });
@@ -40,18 +42,13 @@ class EditorWindow extends Gtk.Window {
       location: file,
     });
 
-    setTimeout(() => {
-      onChange(this._buffer.text);
-    });
     this._buffer.connect("changed", () => {
       onChange(this._buffer.text);
     });
-
-    this.updateButtonReset();
+    this._buffer.set_modified(false);
+    this.onModifiedChanged().catch(console.error);
     this._buffer.connect("modified-changed", () => {
-      this.updateButtonReset();
-      if (!this._buffer.get_modified()) return;
-      this.save().catch(logError);
+      this.onModifiedChanged().catch(console.error);
     });
   }
 
@@ -66,22 +63,13 @@ class EditorWindow extends Gtk.Window {
       this._buffer.text.trim() !== this.default_style.trim();
   }
 
-  async save() {
-    const file_saver = new Source.FileSaver({
+  async onModifiedChanged() {
+    this.updateButtonReset();
+    if (!this._buffer.get_modified()) return;
+    await saveSourceBuffer({
+      source_file: this.source_file,
       buffer: this._buffer,
-      file: this.source_file,
     });
-    const success = await promiseTask(
-      file_saver,
-      "save_async",
-      "save_finish",
-      GLib.PRIORITY_DEFAULT,
-      null,
-      null
-    );
-    if (success) {
-      this._buffer.set_modified(false);
-    }
   }
 
   reset = () => {
@@ -148,4 +136,20 @@ function getDiagnostic(section, error) {
   };
 
   return { range, message: error.message };
+}
+
+async function saveSourceBuffer({ source_file, buffer }) {
+  const file_saver = new Source.FileSaver({
+    buffer,
+    file: source_file,
+  });
+  const success = await file_saver.save_async(
+    GLib.PRIORITY_DEFAULT,
+    null,
+    null
+  );
+
+  if (success) {
+    buffer.set_modified(false);
+  }
 }

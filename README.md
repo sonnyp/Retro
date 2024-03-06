@@ -6,7 +6,7 @@ A customizable retro digital segment clock
 
 ![](data/screenshots/default.png)
 
-<a href='https://beta.flathub.org/apps/details/re.sonny.Retro'><img width='180' height='60' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/></a>
+<a href='https://flathub.org/apps/re.sonny.Retro'><img width='180' height='60' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/></a>
 
 ![](data/screenshots/editor.png)
 
@@ -24,4 +24,4 @@ If you know what you are doing, you can start Retro locally with `make`. Hit `<C
 
 Made with GJS, GTK 4, GtkSourceView, Flatpak.
 
-Copyright 2022 Sonny Piers.
+Copyright 2024 Sonny Piers.
