@@ -24,5 +24,5 @@ export function main(argv) {
     application.set_accels_for_action("app.restart", ["<Control><Shift>Q"]);
   }
 
-  return application.run(argv);
+  return application.runAsync(argv);
 }
