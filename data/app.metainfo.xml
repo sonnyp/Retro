@@ -9,14 +9,14 @@
   <update_contact>sonnyp@gnome.org</update_contact>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0</project_license>
-  <summary>A customizable retro digital segment clock</summary>
+  <summary>Customizable clock widget</summary>
 	<description>
 	  <p>Retro is a simple toy clock that can be customized with CSS.</p>
 	</description>
-  <url type="homepage">https://github.com/sonnyp/Retro</url>
-  <url type="bugtracker">https://github.com/sonnyp/Retro/issues</url>
-  <url type="donation">https://ko-fi.com/sonnyp</url>
-  <url type="vcs-browser">https://github.com/sonnyp/Retro</url>
+  <url type="homepage">https://retro.sonny.re</url>
+  <url type="bugtracker">https://retro.sonny.re/feedback</url>
+  <url type="donation">https://retro.sonny.re/donate</url>
+  <url type="vcs-browser">https://retro.sonny.re/source</url>
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/sonnyp/Retro/main/data/screenshots/default.png</image>

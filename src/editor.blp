@@ -3,32 +3,41 @@ using Adw 1;
 using GtkSource 5;
 using Adw 1;
 
-template $EditorWindow : Gtk.Window {
-  title: "Customize Retro";
+template $EditorWindow : Adw.Window {
+  title: _("Customize Retro");
   default-width: 400;
   default-height: 600;
   hide-on-close: true;
-  titlebar: Adw.HeaderBar {
-    Button button_reset {
-      label: _('_Reset');
-      use-underline: true;
+
+  content: Adw.ToolbarView {
+    top-bar-style: raised;
+
+    [top]
+    Adw.HeaderBar {
+      Button button_reset {
+        label: _('_Reset');
+        use-underline: true;
+      }
+    }
+
+    ScrolledWindow {
+      vexpand: true;
+      GtkSource.View source_view {
+        top-margin: 12;
+        buffer: GtkSource.Buffer buffer {
+          implicit-trailing-newline: false;
+        };
+        monospace: true;
+        auto-indent: true;
+        highlight-current-line: true;
+        indent-on-tab: true;
+        indent-width: 2;
+        insert-spaces-instead-of-tabs: true;
+        show-line-marks: true;
+        show-line-numbers: true;
+        smart-backspace: true;
+        tab-width: 2;
+      }
     }
   };
-
-  ScrolledWindow {
-    vexpand: true;
-    GtkSource.View source_view {
-      buffer: GtkSource.Buffer buffer {};
-      monospace: true;
-      auto-indent: true;
-      highlight-current-line: true;
-      indent-on-tab: true;
-      indent-width: 2;
-      insert-spaces-instead-of-tabs: true;
-      show-line-marks: true;
-      show-line-numbers: true;
-      smart-backspace: true;
-      tab-width: 2;
-    }
-  }
 }

@@ -19,7 +19,7 @@ const scheme_manager = Source.StyleSchemeManager.get_default();
 const style_manager = Adw.StyleManager.get_default();
 const language = language_manager.get_language("css");
 
-class EditorWindow extends Gtk.Window {
+class EditorWindow extends Adw.Window {
   constructor({ application, default_style, file, text, onChange }) {
     super({ application });
 

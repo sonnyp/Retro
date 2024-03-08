@@ -1,7 +1,7 @@
 {
   "id": "re.sonny.Retro",
   "runtime": "org.gnome.Platform",
-  "runtime-version": "46beta",
+  "runtime-version": "46",
   "sdk": "org.gnome.Sdk",
   "command": "re.sonny.Retro",
   "finish-args": [
@@ -19,7 +19,7 @@
         {
           "type": "git",
           "url": "https://gitlab.gnome.org/jwestman/blueprint-compiler",
-          "tag": "v0.10.0"
+          "tag": "v0.12.0"
         }
       ]
     },

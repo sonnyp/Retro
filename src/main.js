@@ -7,6 +7,7 @@ import "gi://Adw?version=1";
 import RetroApplication from "./Application.js";
 
 import "./style.css";
+import "./clock.css";
 
 export function main(argv) {
   const application = new RetroApplication();

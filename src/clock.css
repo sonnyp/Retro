@@ -1,0 +1,21 @@
+#window {
+  background-color: #ff7800;
+  border: solid 8px black;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+#foreground,
+#background {
+  font-family: DSEG7 Classic;
+  color: #222222;
+  font-size: 128px;
+}
+
+#foreground {
+  opacity: 1;
+}
+
+#background {
+  opacity: 0.2;
+}
