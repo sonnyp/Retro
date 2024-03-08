@@ -22,6 +22,15 @@ class RetroWindow extends Adw.ApplicationWindow {
       return GLib.SOURCE_CONTINUE;
     });
 
+    const controller_motion = new Gtk.EventControllerMotion();
+    controller_motion.connect("enter", this.#onEnter);
+    // controller_motion.connect("leave", this.#onLeave);
+    this.add_controller(controller_motion);
+
+    const controller_gesture = new Gtk.GestureSingle();
+    controller_gesture.connect("begin", this.#onEnter);
+    this.add_controller(controller_gesture);
+
     const display_seconds = settings.create_action("display-seconds");
     this.add_action(display_seconds);
 
@@ -37,7 +46,24 @@ class RetroWindow extends Adw.ApplicationWindow {
       this.customize().catch(console.error);
     });
     this.add_action(action_customize);
+
+    this._button_close.connect("clicked", () => {
+      application.quit();
+    });
   }
+
+  touch_timout = null;
+
+  #onEnter = () => {
+    // console.log("enter");
+    clearTimeout(this.touch_timout);
+    this.touch_timout = setTimeout(this.#onLeave, 1500);
+    this._overlay_controls.opacity = 1;
+  };
+
+  #onLeave = () => {
+    this._overlay_controls.opacity = 0;
+  };
 
   async customize() {
     if (!window_editor) {
@@ -130,7 +156,13 @@ export default GObject.registerClass(
   {
     GTypeName: "RetroWindow",
     Template,
-    InternalChildren: ["background", "foreground"],
+    InternalChildren: [
+      "background",
+      "foreground",
+      "button_close",
+      "overlay_controls",
+      "content",
+    ],
   },
   RetroWindow
 );

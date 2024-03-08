@@ -5,28 +5,42 @@ template $RetroWindow : Adw.ApplicationWindow {
   name: "window";
   title: "Retro";
   content: Gtk.WindowHandle {
-    child: Gtk.Box {
-      halign: center;
-      valign: center;
-      Overlay {
-        [overlay]
-        Label foreground {
-          name: "foreground";
-          label: "!!!!!!!!";
+    child: Overlay {
+      [overlay]
+      Gtk.CenterBox overlay_controls {
+        valign: start;
+        opacity: 0;
+
+        [start]
+        MenuButton {
+          icon-name: "open-menu-symbolic";
+          menu-model: primary_menu;
+          primary: true;
+          styles ["circular"]
         }
 
-        Label background {
-          name: "background";
-          label: "88:88:88";
+        [end]
+        Gtk.Button button_close {
+          icon-name: "window-close-symbolic";
+          styles ["circular"]
         }
       }
 
-      MenuButton {
-        icon-name: "open-menu-symbolic";
-        menu-model: primary_menu;
-        primary: true;
+      Gtk.Box content {
+        halign: center;
         valign: center;
-        styles ["circular"]
+        Overlay {
+          [overlay]
+          Label foreground {
+            name: "foreground";
+            label: "!!!!!!!!";
+          }
+
+          Label background {
+            name: "background";
+            label: "88:88:88";
+          }
+        }
       }
     };
   };
