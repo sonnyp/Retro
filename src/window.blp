@@ -5,7 +5,7 @@ template $RetroWindow : Adw.ApplicationWindow {
   name: "window";
   title: "Retro";
   content: Gtk.WindowHandle {
-    child: Overlay {
+    Overlay {
       [overlay]
       Gtk.CenterBox overlay_controls {
         valign: start;
@@ -13,16 +13,18 @@ template $RetroWindow : Adw.ApplicationWindow {
 
         [start]
         MenuButton {
+          name: "button-menu";
           icon-name: "open-menu-symbolic";
           menu-model: primary_menu;
           primary: true;
-          styles ["circular"]
+          styles ["circular", "osd"]
         }
 
         [end]
         Gtk.Button button_close {
+          name: "button-close";
           icon-name: "window-close-symbolic";
-          styles ["circular"]
+          styles ["circular", "osd"]
         }
       }
 
@@ -42,7 +44,7 @@ template $RetroWindow : Adw.ApplicationWindow {
           }
         }
       }
-    };
+    }
   };
 }
 

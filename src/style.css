@@ -1,6 +1,5 @@
 #window {
   background-color: #ff7800;
-  padding: 16px;
   border: solid 8px black;
 }
 
@@ -17,8 +16,4 @@
 
 #background {
   opacity: 0.2;
-}
-
-menubutton image {
-  color: black;
 }
