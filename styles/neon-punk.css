@@ -1,0 +1,22 @@
+#window {
+  background-color: black;
+  border: solid 8px black;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+#foreground,
+#background {
+  font-family: DSEG7 Classic;
+  color: #ff44bb;
+  font-size: 128px;
+  text-shadow: 0 2px 6px white;
+}
+
+#foreground {
+  opacity: 1;
+}
+
+#background {
+  opacity: 0.2;
+}

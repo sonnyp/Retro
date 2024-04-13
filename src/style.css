@@ -1,24 +1,17 @@
-#window {
-  background-color: #ff7800;
-  padding: 16px;
-  border: solid 8px black;
+#container {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
-#foreground,
-#background {
-  font-family: DSEG7 Classic;
-  color: #222222;
-  font-size: 128px;
+#toolbar {
+  padding: 6px;
+  padding-right: 6px;
+  border-radius: 28px;
+  margin-bottom: 6px;
 }
 
-#foreground {
-  opacity: 1;
-}
-
-#background {
-  opacity: 0.2;
-}
-
-menubutton image {
-  color: black;
+#container.maximized #window {
+  border-radius: 0;
 }

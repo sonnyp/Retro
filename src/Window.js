@@ -1,9 +1,9 @@
 import GObject from "gi://GObject";
 import GLib from "gi://GLib";
-import Adw from "gi://Adw";
 import Gio from "gi://Gio";
 import Template from "./window.blp" assert { type: "uri" };
 import Gtk from "gi://Gtk";
+import Adw from "gi://Adw";
 
 const settings = new Gio.Settings({
   schema_id: "re.sonny.Retro",
@@ -39,6 +39,13 @@ class RetroWindow extends Adw.ApplicationWindow {
       this.customize().catch(console.error);
     });
     this.add_action(action_customize);
+
+    this.bind_property(
+      "maximized",
+      this._header,
+      "visible",
+      GObject.BindingFlags.INVERT_BOOLEAN
+    );
   }
 
   async customize() {
@@ -86,9 +93,17 @@ class RetroWindow extends Adw.ApplicationWindow {
   load() {
     this.default_style = new TextDecoder("utf8").decode(
       Gio.resources_lookup_data(
-        "/re/sonny/Retro/src/style.css",
+        "/re/sonny/Retro/src/clock.css",
         Gio.ResourceLookupFlags.NONE
       ).toArray()
+    );
+
+    const css_provider = new Gtk.CssProvider();
+    css_provider.load_from_string(this.default_style);
+    Gtk.StyleContext.add_provider_for_display(
+      this.get_display(),
+      css_provider,
+      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
     );
 
     const file = Gio.File.new_for_path(
@@ -118,16 +133,14 @@ class RetroWindow extends Adw.ApplicationWindow {
     }
 
     const css_provider = new Gtk.CssProvider();
-    if (window_editor) {
-      window_editor?.onCssProvider(css_provider);
-    }
+    window_editor?.onCssProvider(css_provider);
     if (text) {
       css_provider.load_from_string(text);
     }
     Gtk.StyleContext.add_provider_for_display(
       this.get_display(),
       css_provider,
-      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1
     );
     this.css_provider = css_provider;
   };
@@ -159,7 +172,7 @@ export default GObject.registerClass(
   {
     GTypeName: "RetroWindow",
     Template,
-    InternalChildren: ["background", "foreground"],
+    InternalChildren: ["background", "foreground", "header"],
   },
   RetroWindow
 );

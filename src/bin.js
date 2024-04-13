@@ -7,10 +7,7 @@ globalThis.__DEV__ = false;
 
 const file = Gio.File.new_for_uri(import.meta.url);
 const resource = Gio.resource_load(
-  file
-    .get_parent()
-    .resolve_relative_path("re.sonny.Retro.src.gresource")
-    .get_path()
+  file.resolve_relative_path("../re.sonny.Retro.src.gresource").get_path()
 );
 Gio.resources_register(resource);
 

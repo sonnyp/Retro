@@ -1,35 +1,65 @@
 using Gtk 4.0;
 using Adw 1;
+using Gdk 4.0;
 
 template $RetroWindow : Adw.ApplicationWindow {
-  name: "window";
+  name: "container";
   title: "Retro";
-  content: Gtk.WindowHandle {
-    child: Gtk.Box {
-      halign: center;
-      valign: center;
-      Overlay {
-        [overlay]
-        Label foreground {
-          name: "foreground";
-          label: "!!!!!!!!";
+
+  WindowHandle {
+    Box {
+      orientation: vertical;
+      Box header {
+        name: "toolbar";
+        halign: end;
+        styles ["toolbar", "osd"]
+
+        Button {
+          sensitive: false;
+          icon-name: "list-drag-handle-symbolic";
+          cursor: Gdk.Cursor {
+            name: "move";
+          };
         }
 
-        Label background {
-          name: "background";
-          label: "88:88:88";
+        MenuButton {
+          name: "button-menu";
+          icon-name: "open-menu-symbolic";
+          menu-model: primary_menu;
+          primary: true;
+          tooltip-text: _("Main Menu");
+        }
+
+        Gtk.WindowControls window_controls {
+          decoration-layout: "close";
         }
       }
 
-      MenuButton {
-        icon-name: "open-menu-symbolic";
-        menu-model: primary_menu;
-        primary: true;
-        valign: center;
-        styles ["circular"]
+      Box window {
+        name: "window";
+
+        Gtk.Box {
+          halign: center;
+          valign: center;
+          vexpand: true;
+          hexpand: true;
+
+          Overlay {
+            [overlay]
+            Label foreground {
+              name: "foreground";
+              label: "!!!!!!!!";
+            }
+
+            Label background {
+              name: "background";
+              label: "88:88:88";
+            }
+          }
+        }
       }
-    };
-  };
+    }
+  }
 }
 
 menu primary_menu {
