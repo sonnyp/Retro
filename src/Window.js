@@ -50,6 +50,7 @@ class RetroWindow extends Adw.ApplicationWindow {
         console.warn(err);
       }
     }
+    this.display_seconds = settings.get_boolean(DISPLAY_SECONDS);
   }
 
   bindSettings() {
