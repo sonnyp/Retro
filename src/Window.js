@@ -13,15 +13,11 @@ const settings = new Gio.Settings({
 let window_editor;
 
 class RetroWindow extends Adw.ApplicationWindow {
+  source_id = null;
+
   constructor(application) {
     super({ application });
     this.bind_state();
-
-    this.update();
-    GLib.timeout_add_seconds(GLib.PRIORITY_HIGH, 1, () => {
-      this.updateTime();
-      return GLib.SOURCE_CONTINUE;
-    });
 
     const display_seconds = settings.create_action("display-seconds");
     this.add_action(display_seconds);
@@ -30,6 +26,7 @@ class RetroWindow extends Adw.ApplicationWindow {
       if (key !== "display-seconds") return;
       this.update();
     });
+    this.update();
 
     this.load();
 
@@ -38,6 +35,20 @@ class RetroWindow extends Adw.ApplicationWindow {
       this.customize().catch(console.error);
     });
     this.add_action(action_customize);
+  }
+
+  onActive() {
+    this.updateTime();
+    if (this.source_id !== null) return;
+    this.source_id = GLib.timeout_add_seconds(GLib.PRIORITY_HIGH, 1, () => {
+      this.updateTime();
+      return GLib.SOURCE_CONTINUE;
+    });
+  }
+  onSuspended() {
+    if (this.source_id === null) return;
+    GLib.Source.remove(this.source_id);
+    this.source_id = null;
   }
 
   async customize() {
@@ -68,6 +79,11 @@ class RetroWindow extends Adw.ApplicationWindow {
       "fullscreened",
       Gio.SettingsBindFlags.DEFAULT
     );
+
+    this.connect("notify::suspended", () => {
+      this.suspended ? this.onSuspended() : this.onActive();
+    });
+    !this.suspended && this.onActive();
 
     // Resizing the window triggers a lot of notify signals
     // so we use a debounced function instead of settings.bind
