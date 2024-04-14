@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="retro">
-	<schema id="re.sonny.Retro" path="/re/sonny/Retro/">
-		<key name="display-seconds" type="b">
-      <default>true</default>
+  <enum id="re.sonny.Retro.ClockFormat">
+      <value value="0" nick="system"/>
+      <value value="1" nick="24h"/>
+      <value value="2" nick="12h"/>
+  </enum>
+  <schema id="re.sonny.Retro" path="/re/sonny/Retro/">
+    <key name="display-seconds" type="b">
+      <default>false</default>
+    </key>
+    <key name="clock-format" enum="re.sonny.Retro.ClockFormat">
+      <default>"system"</default>
     </key>
     <key name="width" type="i">
       <default>0</default>
@@ -16,5 +24,5 @@
     <key name="fullscreened" type="b">
       <default>false</default>
     </key>
-	</schema>
+  </schema>
 </schemalist>

@@ -12,6 +12,24 @@
   ],
   "modules": [
     {
+      "name": "libportal",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dtests=false",
+        "-Dbackend-gtk3=disabled",
+        "-Dbackend-gtk4=enabled",
+        "-Dbackend-qt5=disabled",
+        "-Ddocs=false"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/flatpak/libportal.git",
+          "commit": "7c408fbaac7eaad5359a78083ac04cc2abd06674"
+        }
+      ]
+    },
+    {
       "name": "blueprint-compiler",
       "buildsystem": "meson",
       "cleanup": ["*"],

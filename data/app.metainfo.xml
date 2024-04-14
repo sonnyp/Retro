@@ -37,10 +37,12 @@
       <description>
         <ul>
           <li>Move the menu button outside the clock</li>
+          <li>Support 12h / AM-PM clock format</li>
+          <li>Optimize energy usage</li>
           <li>Remember window size</li>
           <li>Add close button</li>
           <li>Add drag handle</li>
-          <li>Disable rounded corner on maximize and fullscreen</li>
+          <li>Disable rounded corner when maximize or fullscreen</li>
           <li>Solved a crash</li>
           <li>Use GNOME 46</li>
           <li>Set a window title</li>

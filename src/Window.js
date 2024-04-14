@@ -4,37 +4,99 @@ import Gio from "gi://Gio";
 import Template from "./window.blp" assert { type: "uri" };
 import Gtk from "gi://Gtk";
 import Adw from "gi://Adw";
+import Xdp from "gi://Xdp";
 
+const portal = new Xdp.Portal();
+const portal_settings = portal.get_settings();
 const settings = new Gio.Settings({
   schema_id: "re.sonny.Retro",
   path: "/re/sonny/Retro/",
 });
 
+const GNOME_DESKTOP_INTERFACE = "org.gnome.desktop.interface";
+const CLOCK_FORMAT = "clock-format";
+const DISPLAY_SECONDS = "display-seconds";
+
 let window_editor;
 
 class RetroWindow extends Adw.ApplicationWindow {
+  display_seconds = null;
+  clock_format = null;
+  format = null;
   source_id = null;
 
   constructor(application) {
     super({ application });
-    this.bind_state();
+    this.bindSettings();
+    this.updateFormat();
+    this.bindWindowState();
+    this.load();
+    this.setupActions();
+  }
 
-    const display_seconds = settings.create_action("display-seconds");
-    this.add_action(display_seconds);
+  setupClockFormat() {
+    const clock_format = settings.get_string(CLOCK_FORMAT);
+    if (clock_format !== "system") {
+      this.clock_format = clock_format;
+    } else {
+      try {
+        this.clock_format = portal_settings.read_string(
+          GNOME_DESKTOP_INTERFACE,
+          CLOCK_FORMAT,
+          null
+        );
+      } catch (err) {
+        this.clock_format = "24h";
+        console.warn(err);
+      }
+    }
+  }
 
-    settings.connect("changed", (sef, key) => {
-      if (key !== "display-seconds") return;
+  bindSettings() {
+    this.setupClockFormat();
+    settings.connect("changed", (_self, key) => {
+      if (key === DISPLAY_SECONDS) {
+        this.display_seconds = settings.get_boolean(DISPLAY_SECONDS);
+      } else if (key === CLOCK_FORMAT) {
+        this.setupClockFormat();
+      } else {
+        return;
+      }
       this.update();
     });
-    this.update();
 
-    this.load();
+    portal_settings.connect("changed", (_self, namespace, key, _value) => {
+      if (namespace !== GNOME_DESKTOP_INTERFACE) return;
+      if (key !== CLOCK_FORMAT) return;
+      this.setupClockFormat();
+      this.update();
+    });
+  }
+
+  setupActions() {
+    this.add_action(settings.create_action(DISPLAY_SECONDS));
 
     const action_customize = new Gio.SimpleAction({ name: "customize" });
     action_customize.connect("activate", (_self) => {
       this.customize().catch(console.error);
     });
     this.add_action(action_customize);
+  }
+
+  updateFormat() {
+    let format;
+    if (this.clock_format === "24h") {
+      format = this.display_seconds ? FORMAT_24_SECONDS : FORMAT_24;
+    } else {
+      format = this.display_seconds ? FORMAT_12_SECONDS : FORMAT_12;
+    }
+    this.format = format;
+
+    if (this.display_seconds) {
+      this._background.label = "88:88:88";
+    } else {
+      this._background.label = "88:88";
+    }
   }
 
   onActive() {
@@ -45,6 +107,7 @@ class RetroWindow extends Adw.ApplicationWindow {
       return GLib.SOURCE_CONTINUE;
     });
   }
+
   onSuspended() {
     if (this.source_id === null) return;
     GLib.Source.remove(this.source_id);
@@ -66,7 +129,7 @@ class RetroWindow extends Adw.ApplicationWindow {
     window_editor.present();
   }
 
-  bind_state() {
+  bindWindowState() {
     settings.bind(
       "maximized",
       this,
@@ -166,27 +229,20 @@ class RetroWindow extends Adw.ApplicationWindow {
   };
 
   update() {
-    if (settings.get_boolean("display-seconds")) {
-      this._background.label = "88:88:88";
-    } else {
-      this._background.label = "88:88";
-    }
-
+    this.updateFormat();
     this.updateTime();
   }
 
   updateTime() {
-    const datetime = GLib.DateTime.new_from_unix_local(
-      GLib.get_real_time() / 1000000
-    );
-
-    if (settings.get_boolean("display-seconds")) {
-      this._foreground.label = datetime.format("%T");
-    } else {
-      this._foreground.label = datetime.format("%R");
-    }
+    const datetime = GLib.DateTime.new_now_local();
+    this._foreground.label = datetime.format(this.format);
   }
 }
+
+const FORMAT_24 = "%R";
+const FORMAT_24_SECONDS = "%T";
+const FORMAT_12 = "%l:%M";
+const FORMAT_12_SECONDS = `${FORMAT_12}:%S`;
 
 export default GObject.registerClass(
   {

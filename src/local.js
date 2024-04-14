@@ -10,7 +10,7 @@ const { gresource_path, prefix } = gjspack({
   appid: "re.sonny.Retro",
   entry: Gio.File.new_for_path("./src/main.js"),
   output: Gio.File.new_for_path("/tmp"),
-  // potfiles: Gio.File.new_for_paRetroApplicationth("./po/POTFILES"),
+  // potfiles: Gio.File.new_for_path("./po/POTFILES"),
 });
 const resource = Gio.resource_load(gresource_path);
 resource._register();
