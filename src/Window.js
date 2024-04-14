@@ -15,7 +15,6 @@ let window_editor;
 class RetroWindow extends Adw.ApplicationWindow {
   constructor(application) {
     super({ application });
-
     this.bind_state();
 
     this.update();
@@ -39,13 +38,6 @@ class RetroWindow extends Adw.ApplicationWindow {
       this.customize().catch(console.error);
     });
     this.add_action(action_customize);
-
-    this.bind_property(
-      "maximized",
-      this._header,
-      "visible",
-      GObject.BindingFlags.INVERT_BOOLEAN
-    );
   }
 
   async customize() {
@@ -65,28 +57,40 @@ class RetroWindow extends Adw.ApplicationWindow {
 
   bind_state() {
     settings.bind(
-      "width",
-      this,
-      "default-width",
-      Gio.SettingsBindFlags.DEFAULT
-    );
-    settings.bind(
-      "height",
-      this,
-      "default-height",
-      Gio.SettingsBindFlags.DEFAULT
-    );
-    settings.bind(
-      "is-maximized",
+      "maximized",
       this,
       "maximized",
       Gio.SettingsBindFlags.DEFAULT
     );
     settings.bind(
-      "is-fullscreen",
+      "fullscreened",
       this,
       "fullscreened",
       Gio.SettingsBindFlags.DEFAULT
+    );
+
+    // Resizing the window triggers a lot of notify signals
+    // so we use a debounced function instead of settings.bind
+    const onSizeChanged = debounce(() => {
+      settings.set_int("width", this.default_width);
+      settings.set_int("height", this.default_height);
+    });
+    this.connect("notify::default-width", onSizeChanged);
+    this.connect("notify::default-height", onSizeChanged);
+    this.default_width = settings.get_int("width");
+    this.default_height = settings.get_int("height");
+
+    this.bind_property(
+      "maximized",
+      this._header,
+      "visible",
+      GObject.BindingFlags.INVERT_BOOLEAN
+    );
+    this.bind_property(
+      "fullscreened",
+      this._header,
+      "visible",
+      GObject.BindingFlags.INVERT_BOOLEAN
     );
   }
 
@@ -103,7 +107,7 @@ class RetroWindow extends Adw.ApplicationWindow {
     Gtk.StyleContext.add_provider_for_display(
       this.get_display(),
       css_provider,
-      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION - 2
     );
 
     const file = Gio.File.new_for_path(
@@ -140,7 +144,7 @@ class RetroWindow extends Adw.ApplicationWindow {
     Gtk.StyleContext.add_provider_for_display(
       this.get_display(),
       css_provider,
-      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1
+      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION - 1
     );
     this.css_provider = css_provider;
   };
@@ -192,4 +196,14 @@ function createDataDir() {
   }
 
   return data_dir;
+}
+
+function debounce(func, timeout = 300) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, timeout);
+  };
 }

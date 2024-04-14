@@ -10,10 +10,10 @@
     <key name="height" type="i">
       <default>0</default>
     </key>
-    <key name="is-maximized" type="b">
+    <key name="maximized" type="b">
       <default>false</default>
     </key>
-    <key name="is-fullscreen" type="b">
+    <key name="fullscreened" type="b">
       <default>false</default>
     </key>
 	</schema>

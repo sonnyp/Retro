@@ -12,6 +12,6 @@
   margin-bottom: 6px;
 }
 
-#container.maximized #window {
+#container.maximized #window, #container.fullscreen #window {
   border-radius: 0;
 }
