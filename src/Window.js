@@ -5,6 +5,7 @@ import Template from "./window.blp" assert { type: "uri" };
 import Gtk from "gi://Gtk";
 import Adw from "gi://Adw";
 import Xdp from "gi://Xdp";
+import { persistWindowState } from "../troll/src/util.js";
 
 const portal = new Xdp.Portal();
 const portal_settings = portal.get_settings();
@@ -131,34 +132,12 @@ class RetroWindow extends Adw.ApplicationWindow {
   }
 
   bindWindowState() {
-    settings.bind(
-      "maximized",
-      this,
-      "maximized",
-      Gio.SettingsBindFlags.DEFAULT
-    );
-    settings.bind(
-      "fullscreened",
-      this,
-      "fullscreened",
-      Gio.SettingsBindFlags.DEFAULT
-    );
-
     this.connect("notify::suspended", () => {
       this.suspended ? this.onSuspended() : this.onActive();
     });
     !this.suspended && this.onActive();
 
-    // Resizing the window triggers a lot of notify signals
-    // so we use a debounced function instead of settings.bind
-    const onSizeChanged = debounce(() => {
-      settings.set_int("width", this.default_width);
-      settings.set_int("height", this.default_height);
-    });
-    this.connect("notify::default-width", onSizeChanged);
-    this.connect("notify::default-height", onSizeChanged);
-    this.default_width = settings.get_int("width");
-    this.default_height = settings.get_int("height");
+    persistWindowState({ window: this, settings });
 
     this.bind_property(
       "maximized",
@@ -269,14 +248,4 @@ function createDataDir() {
   }
 
   return data_dir;
-}
-
-function debounce(func, timeout = 300) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func(...args);
-    }, timeout);
-  };
 }
