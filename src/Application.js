@@ -22,15 +22,15 @@ class RetroApplication extends Adw.Application {
     this.set_accels_for_action("app.quit", ["<Ctrl>Q"]);
 
     const action_about = new Gio.SimpleAction({ name: "about" });
-    action_about.connect("activate", (action) => {
+    action_about.connect("activate", (_action) => {
       const about_window = new Adw.AboutWindow({
         developer_name: "Sonny Piers",
         copyright: "Copyright 2024 Sonny Piers",
         license_type: Gtk.License.GPL_3_0_ONLY,
         application_name: "Retro",
         application_icon: "re.sonny.Retro",
-        website: "https://github.com/sonnyp/Retro",
-        issue_url: "https://github.com/sonnyp/Retro/issues",
+        website: "https://retro.sonny.re",
+        issue_url: "https://commit.sonny.re/feedback",
         // TRANSLATORS: eg. 'Translator Name <your.email@domain.com>' or 'Translator Name https://website.example'
         translator_credits: _("translator-credits"),
         developers: ["Sonny Piers https://sonny.re"],
@@ -38,7 +38,7 @@ class RetroApplication extends Adw.Application {
           "Tobias Bernard <tbernard@gnome.org>",
         ],
       });
-      about_window.present(this.active_window);
+      about_window.present(null);
     });
     this.add_action(action_about);
   }

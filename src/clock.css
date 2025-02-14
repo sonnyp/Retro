@@ -1,4 +1,7 @@
-/* https://docs.gtk.org/gtk4/css-properties.html */
+/*
+  https://docs.gtk.org/gtk4/css-properties.html
+  https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/css-variables.html
+*/
 
 #window {
   background-color: #ff7800;
