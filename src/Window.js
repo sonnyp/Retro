@@ -148,18 +148,15 @@ class RetroWindow extends Adw.ApplicationWindow {
 
     persistWindowState({ window: this, settings });
 
-    this.bind_property(
-      "maximized",
-      this._header,
-      "visible",
-      GObject.BindingFlags.INVERT_BOOLEAN
-    );
-    this.bind_property(
-      "fullscreened",
-      this._header,
-      "visible",
-      GObject.BindingFlags.INVERT_BOOLEAN
-    );
+    this.connect('realize', () => {
+      const surface = this.get_surface()
+      surface.connect('notify::state', () => {
+        const tiled = surface.state & Gdk.ToplevelState.TILED
+        const maximized = surface.state & Gdk.ToplevelState.MAXIMIZED
+        const fullscreened = surface.state & Gdk.ToplevelState.FULLSCREEN
+        this._header.visible = !(tiled || maximized || fullscreened);
+      })
+    })
   }
 
   load() {
