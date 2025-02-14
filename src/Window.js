@@ -5,6 +5,7 @@ import Template from "./window.blp" assert { type: "uri" };
 import Gtk from "gi://Gtk";
 import Adw from "gi://Adw";
 import Xdp from "gi://Xdp";
+import Gdk from "gi://Gdk";
 import { persistWindowState } from "../troll/src/util.js";
 
 const portal = new Xdp.Portal();
@@ -83,6 +84,14 @@ class RetroWindow extends Adw.ApplicationWindow {
       this.customize().catch(console.error);
     });
     this.add_action(action_customize);
+
+    const action_fullscreen = new Gio.PropertyAction({
+      name: "fullscreen",
+      object: this,
+      property_name: 'fullscreened',
+    });
+    this.add_action(action_fullscreen);
+    this.application.set_accels_for_action("win.fullscreen", ["F12"]);
   }
 
   updateFormat() {
