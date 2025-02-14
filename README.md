@@ -2,11 +2,18 @@
 
 # Retro
 
-A customizable retro digital segment clock
+Customizable clock widget
 
 ![](data/screenshots/default.png)
 
 <a href='https://flathub.org/apps/re.sonny.Retro'><img width='180' height='60' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/></a>
+
+Retro is a retro digital segment clock that can be customized. It can be used in the background, maximized or as an always on top widget.</p>
+Supported features:
+* 24h/12h format
+* styling with CSS
+* restore window size
+* maximized, fullscreen and tiling
 
 ![](data/screenshots/editor.png)
 

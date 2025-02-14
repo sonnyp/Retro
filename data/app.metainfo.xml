@@ -12,12 +12,12 @@
   <summary>Customizable clock widget</summary>
   <description>
     <p>Retro is a retro digital segment clock that can be customized. It can be used in the background, maximized or as an always on top widget.</p>
-    <p>Supported features</p>
+    <p>Supported features:</p>
     <ul>
       <li>24h/12h format</li>
-      <li>fullscreen</li>
-      <li>Styling with CSS</li>
-      <li>Restore window size</li>
+      <li>styling with CSS</li>
+      <li>restore window size</li>
+      <li>maximized, fullscreen and tiling</li>
     </ul>
   </description>
   <url type="homepage">https://retro.sonny.re</url>
@@ -40,6 +40,17 @@
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="2.1" date="2025-02-14">
+      <description translatable="no">
+        <ul>
+          <li>Update application icon</li>
+          <li>Add fullscreen option</li>
+          <li>Disable rounded corners when the window is tiled</li>
+          <li>Hide header bar when the window is tiled</li>
+          <li>Use GNOME 47</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0" date="2024-04-14">
       <description translatable="no">
         <ul>
@@ -66,8 +77,8 @@
     <kudo>ModernToolkit</kudo>
   </kudos>
   <branding>
-    <color type="primary" scheme_preference="light">#ff973a</color>
-    <color type="primary" scheme_preference="dark">#532700</color>
+    <color type="primary" scheme_preference="light">#ffd29b</color>
+    <color type="primary" scheme_preference="dark">#b64618</color>
   </branding>
   <requires>
     <display_length compare="ge">720</display_length>

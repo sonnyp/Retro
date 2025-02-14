@@ -14,9 +14,6 @@
 
 #container.maximized #window,
 #container.fullscreen #window,
-#container.tiled-top #window,
-#container.tiled-bottom #window,
-#container.tiled-left #window,
-#container.tiled-right #window {
+#container.tiled #window {
   border-radius: 0;
 }

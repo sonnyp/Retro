@@ -155,6 +155,12 @@ class RetroWindow extends Adw.ApplicationWindow {
         const maximized = surface.state & Gdk.ToplevelState.MAXIMIZED
         const fullscreened = surface.state & Gdk.ToplevelState.FULLSCREEN
         this._header.visible = !(tiled || maximized || fullscreened);
+
+        if (tiled) {
+          this.add_css_class('tiled')
+        } else {
+          this.remove_css_class('tiled')
+        }
       })
     })
   }
