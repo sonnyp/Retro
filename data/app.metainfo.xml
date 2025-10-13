@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-  <id>re.sonny.Retro.desktop</id>
+  <id>re.sonny.Retro</id>
   <launchable type="desktop-id">re.sonny.Retro.desktop</launchable>
   <name translatable="no">Retro</name>
   <developer id="sonny.re">
@@ -40,6 +40,13 @@
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="2.2" date="2025-10-13">
+      <description translatable="no">
+        <ul>
+          <li>Use GNOME Platform 49</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.1" date="2025-02-14">
       <description translatable="no">
         <ul>
@@ -68,7 +75,7 @@
       </description>
     </release>
     <release version="1.0" date="2022-10-19">
-      <description translatable="no">This is the first release of Retro. Enjoy.</description>
+      <description translatable="no"><p>This is the first release of Retro. Enjoy.</p></description>
     </release>
   </releases>
   <kudos>

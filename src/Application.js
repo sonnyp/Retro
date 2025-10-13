@@ -25,6 +25,7 @@ class RetroApplication extends Adw.Application {
     action_about.connect("activate", (_action) => {
       const about_window = new Adw.AboutWindow({
         developer_name: "Sonny Piers",
+        version: "v2.2",
         copyright: "Copyright 2024 Sonny Piers",
         license_type: Gtk.License.GPL_3_0_ONLY,
         application_name: "Retro",
